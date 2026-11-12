@@ -29,6 +29,8 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '9.3.1'
+      - name: Reassemble compressed source archive
+        run: cat source-chunks/part*.b64 | base64 --decode > AniMotionStudio_Phase4_Source.tar.xz
       - name: Extract Android project
         run: tar -xJf AniMotionStudio_Phase4_Source.tar.xz
       - name: Run tests and build APK
