@@ -69,6 +69,14 @@ jobs:
       - name: Extract Android project
         run: tar -xJf AniMotionStudio_Phase4_Source.tar.xz
 
+      - name: Upload editable Android project source
+        uses: actions/upload-artifact@v4
+        with:
+          name: AniMotionStudio-source-snapshot
+          path: AniMotionStudio/
+          if-no-files-found: error
+          retention-days: 14
+
       - name: Configure Android 17 compile SDK
         run: |
           python3 - <<'PY'
