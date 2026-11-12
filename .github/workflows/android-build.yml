@@ -24,14 +24,14 @@ jobs:
         with:
           packages: 'platform-tools'
       - name: Install Android SDK packages
-        run: sdkmanager "platform-tools" "platforms;android-37" "build-tools;36.0.0"
+        run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '9.3.1'
       - name: Extract Android project
-        run: tar -xzf AniMotionStudio_Phase4_Source.tar.gz
-      - name: Test and build APK
+        run: tar -xJf AniMotionStudio_Phase4_Source.tar.xz
+      - name: Run tests and build APK
         working-directory: AniMotionStudio
         run: gradle --no-daemon :app:testDebugUnitTest :app:assembleDebug --stacktrace
       - name: Upload debug APK
