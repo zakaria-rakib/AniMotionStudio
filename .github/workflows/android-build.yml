@@ -14,28 +14,65 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
+
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
         with:
           packages: 'platform-tools'
+
       - name: Install Android SDK packages
         run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
+
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '9.3.1'
-      - name: Reassemble compressed source archive
-        run: cat source-chunks/part*.b64 | base64 --decode > AniMotionStudio_Phase4_Source.tar.xz
+
+      - name: Reassemble verified source archive
+        run: |
+          cat \
+            source-parts/part00.bin \
+            source-parts/part01.bin \
+            source-parts/part02.bin \
+            source-parts/mid03-a.bin \
+            source-parts/mid03-b.bin \
+            source-parts/mid03-c.bin \
+            source-parts/part04.bin \
+            source-parts/part05.bin \
+            source-parts/part06.bin \
+            source-parts/part07.bin \
+            source-parts/tail-24.bin \
+            source-parts/tail-25.bin \
+            source-parts/tail-26.bin \
+            source-parts/tail-27.bin \
+            source-parts/tail-28.bin \
+            source-parts/tail-29.bin \
+            source-parts/tail-30.bin \
+            source-parts/tail-31.bin \
+            source-parts/tail-32.bin \
+            source-parts/tail-33.bin \
+            > AniMotionStudio_Phase4_Source.tar.xz
+          echo "037340b35dd0cbd0dedfc0d1058a9a7e9819e27f32e0df6a4697fa9621eb8bb7  AniMotionStudio_Phase4_Source.tar.xz" | sha256sum --check -
+
       - name: Extract Android project
         run: tar -xJf AniMotionStudio_Phase4_Source.tar.xz
+
+      - name: Show project structure
+        run: |
+          test -f AniMotionStudio/app/build.gradle.kts
+          test -f AniMotionStudio/app/src/main/AndroidManifest.xml
+          find AniMotionStudio/app/src/main/java -type f | head -30
+
       - name: Run tests and build APK
         working-directory: AniMotionStudio
         run: gradle --no-daemon :app:testDebugUnitTest :app:assembleDebug --stacktrace
+
       - name: Upload debug APK
         uses: actions/upload-artifact@v4
         with:
