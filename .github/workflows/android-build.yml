@@ -53,7 +53,7 @@ jobs:
           echo "a829dd7e67de9ce929094ad713300d750ef7bd6244513d019e423a3ac7e24793  AniMotionStudio_Phase5_Source.tar.xz" | sha256sum --check -
 
       - name: Extract Android project
-        run: tar -xJf AniMotionStudio_Phase4_Source.tar.xz
+        run: tar -xJf AniMotionStudio_Phase5_Source.tar.xz
 
       - name: Upload editable Android project source
         uses: actions/upload-artifact@v4
