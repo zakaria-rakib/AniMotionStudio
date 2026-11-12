@@ -1,0 +1,125 @@
+name: Build AniMotion Studio APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, master ]
+
+permissions:
+  contents: read
+
+jobs:
+  build-debug-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools'
+
+      - name: Install Android SDK packages
+        run: |
+          sdkmanager --install "platforms;android-36" "platforms;android-37.0" "build-tools;36.0.0"
+          test -d "$ANDROID_HOME/platforms/android-37.0"
+          # Some Android Gradle Plugin versions still look for the unsuffixed folder.
+          if [ ! -e "$ANDROID_HOME/platforms/android-37" ]; then
+            ln -s android-37.0 "$ANDROID_HOME/platforms/android-37"
+          fi
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.3.1'
+
+      - name: Reassemble verified source archive
+        run: |
+          cat \
+            source-parts/part00.bin \
+            source-parts/part01.bin \
+            source-parts/part02.bin \
+            source-parts/mid03-a.bin \
+            source-parts/mid03-b.bin \
+            source-parts/mid03-c.bin \
+            source-parts/part04.bin \
+            source-parts/part05.bin \
+            source-parts/part06.bin \
+            source-parts/part07.bin \
+            source-parts/tail-24.bin \
+            source-parts/tail-25.bin \
+            source-parts/tail-26.bin \
+            source-parts/tail-27.bin \
+            source-parts/tail-28.bin \
+            source-parts/tail-29.bin \
+            source-parts/tail-30.bin \
+            source-parts/tail-31.bin \
+            source-parts/tail-32.bin \
+            source-parts/tail-33.bin \
+            > AniMotionStudio_Phase4_Source.tar.xz
+          echo "037340b35dd0cbd0dedfc0d1058a9a7e9819e27f32e0df6a4697fa9621eb8bb7  AniMotionStudio_Phase4_Source.tar.xz" | sha256sum --check -
+
+      - name: Extract Android project
+        run: tar -xJf AniMotionStudio_Phase4_Source.tar.xz
+
+      - name: Upload editable Android project source
+        uses: actions/upload-artifact@v4
+        with:
+          name: AniMotionStudio-source-snapshot
+          path: AniMotionStudio/
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Configure Android 17 compile SDK
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          root = Path("AniMotionStudio")
+          pattern = re.compile(r"(compileSdk(?:Version)?\s*(?:=\s*)?)36(?![0-9])", re.IGNORECASE)
+          changed = []
+          candidates = list(root.rglob("*.gradle")) + list(root.rglob("*.gradle.kts")) + list(root.rglob("*.toml")) + list(root.rglob("gradle.properties"))
+          for path in candidates:
+              if any(part in {"build", ".gradle"} for part in path.parts):
+                  continue
+              original = path.read_text(encoding="utf-8")
+              updated, count = pattern.subn(r"\g<1>37", original)
+              if count:
+                  path.write_text(updated, encoding="utf-8")
+                  changed.append(str(path))
+          if not changed:
+              raise SystemExit("Could not locate a numeric compileSdk 36 setting. Inspect Gradle configuration before building.")
+          print("Updated compileSdk from 36 to 37 in:")
+          for name in changed:
+              print(" -", name)
+          PY
+          echo "Resolved compileSdk settings:"
+          grep -RniE 'compileSdk(Version)?' AniMotionStudio --include='*.gradle' --include='*.gradle.kts' --include='*.toml' --exclude-dir=build || true
+
+      - name: Show project structure
+        run: |
+          test -f AniMotionStudio/app/build.gradle.kts
+          test -f AniMotionStudio/app/src/main/AndroidManifest.xml
+          find AniMotionStudio/app/src/main/java -type f | head -30
+
+      - name: Build debug APK
+        working-directory: AniMotionStudio
+        run: |
+          gradle --no-daemon :app:assembleDebug --stacktrace
+          test -s app/build/outputs/apk/debug/app-debug.apk
+          sha256sum app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: AniMotionStudio-debug-apk
+          path: AniMotionStudio/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error

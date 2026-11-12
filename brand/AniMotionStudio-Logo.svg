@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">AniMotion Studio</title>
+  <desc id="desc">Original vector mark combining a motion play symbol, keyframes, and a flowing animation stroke.</desc>
+  <defs>
+    <linearGradient id="bg" x1="60" y1="34" x2="452" y2="478" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#18243E"/>
+      <stop offset="1" stop-color="#090F20"/>
+    </linearGradient>
+    <linearGradient id="main" x1="107" y1="113" x2="406" y2="401" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#58E6D2"/>
+      <stop offset="0.52" stop-color="#67B7FF"/>
+      <stop offset="1" stop-color="#9A83FF"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="140" y1="355" x2="377" y2="150" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#A58BFF"/>
+      <stop offset="1" stop-color="#63E6D2"/>
+    </linearGradient>
+    <filter id="shadow" x="45" y="40" width="430" height="440" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feGaussianBlur stdDeviation="12"/>
+    </filter>
+  </defs>
+  <rect x="24" y="24" width="464" height="464" rx="122" fill="url(#bg)"/>
+  <path d="M122 340C158 278 194 246 238 245C290 243 305 291 350 282C374 278 392 260 408 237" fill="none" stroke="#45DCCB" stroke-width="30" stroke-linecap="round" opacity=".2" filter="url(#shadow)"/>
+  <path d="M119 344C153 292 190 257 231 253C281 248 302 294 345 287C370 283 391 265 407 241" fill="none" stroke="url(#main)" stroke-width="24" stroke-linecap="round"/>
+  <path d="M139 164L139 348" stroke="#DCEBFF" stroke-opacity=".58" stroke-width="9" stroke-linecap="round"/>
+  <path d="M372 154L372 347" stroke="#DCEBFF" stroke-opacity=".34" stroke-width="9" stroke-linecap="round" stroke-dasharray="10 18"/>
+  <circle cx="139" cy="164" r="20" fill="#62E7D5" stroke="#E8FFFC" stroke-width="7"/>
+  <circle cx="139" cy="348" r="20" fill="#A18CFF" stroke="#F0EBFF" stroke-width="7"/>
+  <circle cx="372" cy="154" r="15" fill="#84AFFF" stroke="#EAF3FF" stroke-width="6"/>
+  <path d="M223 157C223 144 237 136 248 143L340 200C351 207 351 223 340 230L248 287C237 294 223 286 223 273V157Z" fill="url(#accent)" stroke="#F4FBFF" stroke-width="9" stroke-linejoin="round"/>
+  <path d="M111 405H401" stroke="#D8E6FF" stroke-opacity=".2" stroke-width="8" stroke-linecap="round"/>
+  <path d="M167 405H226" stroke="#5DE5D3" stroke-width="8" stroke-linecap="round"/>
+  <path d="M248 405H307" stroke="#78B8FF" stroke-width="8" stroke-linecap="round"/>
+  <path d="M329 405H388" stroke="#A18CFF" stroke-width="8" stroke-linecap="round"/>
+</svg>

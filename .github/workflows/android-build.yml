@@ -43,28 +43,14 @@ jobs:
       - name: Reassemble verified source archive
         run: |
           cat \
-            source-parts/part00.bin \
-            source-parts/part01.bin \
-            source-parts/part02.bin \
-            source-parts/mid03-a.bin \
-            source-parts/mid03-b.bin \
-            source-parts/mid03-c.bin \
-            source-parts/part04.bin \
-            source-parts/part05.bin \
-            source-parts/part06.bin \
-            source-parts/part07.bin \
-            source-parts/tail-24.bin \
-            source-parts/tail-25.bin \
-            source-parts/tail-26.bin \
-            source-parts/tail-27.bin \
-            source-parts/tail-28.bin \
-            source-parts/tail-29.bin \
-            source-parts/tail-30.bin \
-            source-parts/tail-31.bin \
-            source-parts/tail-32.bin \
-            source-parts/tail-33.bin \
-            > AniMotionStudio_Phase4_Source.tar.xz
-          echo "037340b35dd0cbd0dedfc0d1058a9a7e9819e27f32e0df6a4697fa9621eb8bb7  AniMotionStudio_Phase4_Source.tar.xz" | sha256sum --check -
+            source-parts/v5-00.bin \
+            source-parts/v5-01.bin \
+            source-parts/v5-02.bin \
+            source-parts/v5-03.bin \
+            source-parts/v5-04.bin \
+            source-parts/v5-05.bin \
+            > AniMotionStudio_Phase5_Source.tar.xz
+          echo "a829dd7e67de9ce929094ad713300d750ef7bd6244513d019e423a3ac7e24793  AniMotionStudio_Phase5_Source.tar.xz" | sha256sum --check -
 
       - name: Extract Android project
         run: tar -xJf AniMotionStudio_Phase4_Source.tar.xz
